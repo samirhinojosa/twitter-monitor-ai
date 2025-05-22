@@ -13,22 +13,34 @@ An intelligent daily Twitter (now X) monitoring system that checks specific acco
 - Poetry
 - Docker
 - FastAPI
+- Tweepy
 
 ## Project Structure
     .
     ├── api                     # FastAPI entry point
-    ├── test                    # Automated tests
-    ├── utils                   # Config, helpers
+    ├── core                    # Core application settings (config, environment, logging)
+    ├── domain
+        ├── domain              # Domain models/entities        
+        ├── schemas             # Pydantic models used for request/response serialization (DTOs)     
+    ├── infrastructure
+        ├── repositories        # Concrete implementations of data access (e.g., DB, cache)
+        ├── services            # Third-party integrations (e.g., Twitter API via Tweepy, ML, etc.)
+    ├── interfaces              # Abstract interfaces (ports) for external dependencies like APIs, DBs
+    ├── use_cases               # Application-specific business logic (orchestration layer)
+    ├── test                    # Unit and integration tests
     ├── Dockerfile
-    ├── README.md
+    ├── LICENSE
+    ├── poetry.lock
     ├── pyproject.toml
     ├── README.md
-    └── start.sh                # Start app (reloads in dev mode)
+    └── start.sh                # Shell script to launch the app (with dev reload using uvicorn)
 
 ## Running the Project (Development)
 
 ```bash
 docker build -t twitter-monitor-ai .
-docker run -p 8000:8000 -e ENV=dev twitter-monitor-ai
+
+# Executing in dev mode
+docker run -e ENV=dev -e PORT=8000 -p 8000:8000 -v $(pwd):/app twitter-monitor-ai
 ```
 Access the app at http://localhost:8000
